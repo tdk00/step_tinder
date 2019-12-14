@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+</head>
+<body>
+
+<div id="container">
+   </div>
+<div class="col-4 offset-4">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <button style="color: red;" type="button" class="btn btn-outline-danger btn-block"><span class="fa fa-times"></span> Dislike</button>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <button style="color: green;" class="btn btn-outline-success btn-block"><span class="fa fa-heart"></span> Like</button>
+                </div>
+                <!--/col-->
+            </div>
+            <!--/row-->
+        </div>
+        <!--/card-block-->
+    </div>
+</div>
+<script>
+    $(".btn-block").click(function(){
+        var userId = $("#username").attr("userId");
+        $.post("likePage",
+            {
+                userId:1
+            },
+            function(data, status){
+            });
+    });
+
+    $(document).ready(function(){
+        $.post("likePage",
+            {
+                userId:1
+            },
+            function(data, status){
+                var allUsers = data.allUsers;
+                for (var i = 0; i < allUsers.length; i++) {
+                    var user = allUsers[i];
+                        //var value = user.last_name;
+                        //alert(value);
+                        $("#container").append('<div id="'+user.user_id+'" class="buddy"><div class="avatar" style="display: block; background-image: url('+user.user_img+')"></div><h2 class="nameSurname">'+user.first_name+' '+user.last_name+'</h2></div>');
+                        if(i==0){
+                            $(".buddy").show();
+                        }
+                }
+
+                $(".buddy").on("swiperight",function(){
+                    alert($(this).attr("id"));
+                    $(this).addClass('rotate-left').delay(700).fadeOut(1);
+                    $('.buddy').find('.status').remove();
+
+                    $(this).append('<div class="status like">Like!</div>');
+                    if ( $(this).is(':last-child') ) {
+                        $('.buddy:nth-child(1)').removeClass ('rotate-left rotate-right').fadeIn(300);
+                        window.location.replace("peopleList");
+                    } else {
+                        $(this).next().removeClass('rotate-left rotate-right').fadeIn(400);
+                    }
+                });
+
+                $(".buddy").on("swipeleft",function(){
+                    alert($(this).attr("id"));
+                    $(this).addClass('rotate-right').delay(700).fadeOut(1);
+                    $('.buddy').find('.status').remove();
+                    $(this).append('<div class="status dislike">Dislike!</div>');
+
+                    if ( $(this).is(':last-child') ) {
+                        $('.buddy:nth-child(1)').removeClass ('rotate-left rotate-right').fadeIn(300);
+                        window.location.replace("peopleList");
+                    } else {
+                        $(this).next().removeClass('rotate-left rotate-right').fadeIn(400);
+                    }
+                });
+            });
+
+    });
+
+</script>
+</body>
+</html>
