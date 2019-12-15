@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="img/favicon.ico">
+    <link rel="icon" href="static/img/favicon.ico">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 
     <title>Chat</title>
@@ -18,14 +18,14 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" style="position: absolute; top:0; left:12%;">
     <div class="row">
         <div class="chat-main col-6 offset-3">
             <div class="col-md-12 chat-header">
                 <div class="row header-one text-white p-1">
                     <div class="col-md-6 name pl-2">
                         <i class="fa fa-comment"></i>
-                        <h6 class="ml-1 mb-0">Ketty Peris</h6>
+                        <h6 id="receiver" class="ml-1 mb-0">Receiver Name</h6>
                     </div>
                     <div class="col-md-6 options text-right pr-0">
                         <i class="fa fa-window-minimize hide-chat-box hover text-center pt-1"></i>
@@ -48,72 +48,6 @@
             <div class="chat-content">
                 <div class="col-md-12 chats pt-3 pl-2 pr-3 pb-3">
                     <ul id="mCont" class="p-0">
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Hii
-                            </p>
-                        </li>
-                        <li class="receive-msg float-left mb-2">
-                            <div class="sender-img">
-                                <img src="http://nicesnippets.com/demo/image1.jpg" class="float-left">
-                            </div>
-                            <div class="receive-msg-desc float-left ml-2">
-                                <p class="bg-white m-0 pt-1 pb-1 pl-2 pr-2 rounded">
-                                    hiii <br>
-                                    How are you ?<br>
-                                </p>
-                                <span class="receive-msg-time">ketty, Jan 25, 6:20 PM</span>
-                            </div>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                nice <br>
-                                Are you fine ?
-                            </p>
-                        </li>
-                        <li class="receive-msg float-left mb-2">
-                            <div class="sender-img">
-                                <img src="http://nicesnippets.com/demo/image1.jpg" class="float-left">
-                            </div>
-                            <div class="receive-msg-desc float-left ml-2">
-                                <p class="bg-white m-0 pt-1 pb-1 pl-2 pr-2 rounded">
-                                    Yes always
-                                </p>
-                            </div>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                <a href="https://nicesnippets.com/" class="text-dark rounded" target="_blank"><u>https://nicesnippets.com/</u></a>
-                            </p>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Byy
-                            </p>
-                            <span class="send-msg-time">1 min</span>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                <a href="https://nicesnippets.com/" class="text-dark rounded" target="_blank"><u>https://nicesnippets.com/</u></a>
-                            </p>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Byy
-                            </p>
-                            <span class="send-msg-time">1 min</span>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                <a href="https://nicesnippets.com/" class="text-dark rounded" target="_blank"><u>https://nicesnippets.com/</u></a>
-                            </p>
-                        </li>
-                        <li class="send-msg float-right mb-2">
-                            <p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">
-                                Byy
-                            </p>
-                            <span class="send-msg-time">1 min</span>
-                        </li>
                     </ul>
                 </div>
                 <div class="col-md-12 p-2 msg-box border border-primary">
@@ -122,10 +56,10 @@
                             <i class="fa fa-smile-o"></i>
                         </div>
                         <div class="col-md-7 pl-0">
-                            <input type="text" class="border-0" placeholder=" Send message" />
+                            <input id="msgContent" type="text" class="border-0" placeholder=" Send message" />
                         </div>
                         <div class="col-md-3 text-right options-right">
-                            <i class="fa fa-picture-o mr-2"></i>
+                            <button id="sendBtn" class="btn btn-success">Send</button>
                         </div>
                     </div>
                 </div>
@@ -139,21 +73,54 @@
 
     $.post("messages",
         {
-            userToId:toId
+            receiverId:toId
         },
         function(data, status){
+
             var allMessages = data.allMessages;
+            var c_user_id = data.c_user_id;
             for (var i = 0; i < allMessages.length; i++) {
                 var message = allMessages[i];
-                alert(message.content);
-                $("#mCont").append('<li class="send-msg float-right mb-2">'+message.content+'</li>');
+                if(message.user_from==c_user_id[0].user_id){
+                    $("#mCont").append('<li class="send-msg float-right mb-2"><p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">'+message.content+'</p> </li>');
+                }
+                else
+                {
+                    $("#mCont").append('<li class="receive-msg float-left mb-2"><div class="sender-img"><img src="'+message.receiverImg+'" class="float-left"></div><div class="receive-msg-desc float-left ml-2"><p class="bg-white m-0 pt-1 pb-1 pl-2 pr-2 rounded">'+message.content+'</p></div></li>');
+                    $("#receiver").text(message.receiverName);
+                }
+
+                }
+
                 if(i==0){
                     $(".buddy").show();
                 }
-            }
+
 
 
         });
+
+    $("#sendBtn").click(function () {
+            var mContent = $("#msgContent").val();
+            if(mContent.length>0){
+                $("#mCont").append('<li class="send-msg float-right mb-2"><p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">'+mContent+'</p> </li>');
+                $("#msgContent").val("");
+
+            }
+    });
+
+    var input = document.getElementById("msgContent");
+
+    // Execute a function when the user releases a key on the keyboard
+    input.addEventListener("keyup", function(event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("sendBtn").click();
+        }
+    });
 
 </script>
 </body>

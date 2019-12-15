@@ -14,12 +14,12 @@ import java.util.List;
 public class MessagesDAO {
     static Connection currentCon = null;
     static ResultSet rs = null;
-    List<MessagesS> allMessages = new ArrayList<MessagesS>();
+    List<MessagesS> allMessages = new ArrayList<>();
 
-    public List<MessagesS> getAllMessages() {
-        Statement stmt = null;
+    public List<MessagesS> getAllMessages(int senderId, int receiverId) {
+        Statement stmt;
         String searchQuery =
-                "select * from messages";
+                "select * from msg_view WHERE (msg_from="+senderId+" AND msg_to="+receiverId+") || (msg_to="+senderId+" AND msg_from="+receiverId+")";
         try
         {
             //connect to DB
@@ -32,7 +32,11 @@ public class MessagesDAO {
                         rs.getInt("msg_from"),
                         rs.getInt("msg_to"),
                         rs.getString("content"),
-                        rs.getString("time")
+                        rs.getString("sender"),
+                        rs.getString("receiver"),
+                        rs.getString("senderImg"),
+                        rs.getString("receiverImg"),
+                        rs.getTimestamp("time").toString()
                 ));
             }
 
