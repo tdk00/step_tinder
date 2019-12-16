@@ -20,9 +20,6 @@ public class App {
     handler.addServlet(new ServletHolder(new MessagesServlet()), "/messages/*");
     handler.addServlet(new ServletHolder(new SendMessageServlet()), "/sendMessage/*");
     handler.addServlet(new ServletHolder(new LikedServlet()), "/liked/*");
-//    handler.addServlet(new ServletHolder(new LoginServlet(authService)), "/*");
-    TemplateEngine te = new TemplateEngine("./content/templates");
-    handler.addServlet(new ServletHolder(new TemplateServlet(te)), "/te/*");
 
     server.setHandler(handler);
     server.start();
