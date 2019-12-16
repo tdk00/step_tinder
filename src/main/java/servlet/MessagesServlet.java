@@ -43,7 +43,9 @@ public class MessagesServlet extends HttpServlet {
         String receiverId = req.getParameter("receiverId");
         MessagesDAO m = new MessagesDAO();
         List<MessagesS> allMessages = m.getAllMessages(Integer.parseInt(senderId),Integer.parseInt(receiverId));
-
+        if(allMessages==null){
+            System.exit(0);
+        }
         if(allMessages.size()==0){
             PrintWriter out = resp.getWriter();
             out.print("size0");
@@ -60,7 +62,6 @@ public class MessagesServlet extends HttpServlet {
                 String content = allMessages.get(i).getContent();
                 String receiverImg = allMessages.get(i).getSenderImg();
                 String receiverName = allMessages.get(i).getSender();
-
                 out.print("{\"message_id\":\""+message_id+"\",\"user_from\":\""+user_from+"\",\"user_to\":\""+user_to+"\",\"content\":\""+content+"\",\"receiverImg\":\""+receiverImg+"\",\"receiverName\":\""+receiverName+"\"}");
                 if(i<allMessages.size()-1){
                     out.print(",");

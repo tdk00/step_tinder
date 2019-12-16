@@ -46,7 +46,18 @@ public class LikePageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String c_user_id = "";
+        final Cookie[] cookies = req.getCookies();
+        if(cookies!=null){
+            for (Cookie c : cookies) {
 
+                if(c.getName().equals("user_id"))
+                {
+                    c_user_id = c.getValue();
+                }
+            }
+        }
+        String senderId = c_user_id;
         if(allUsers.size()==0){
             PrintWriter out = resp.getWriter();
             out.print("size0");
@@ -68,7 +79,8 @@ public class LikePageServlet extends HttpServlet {
                 // allUsers.remove(0);
 
             }
-            out.print("]}");
+
+            out.print("],\"c_user_id\":[{\"user_id\":\""+c_user_id+"\"}]}");
             out.flush();
             //allUsers.remove(0);
         }

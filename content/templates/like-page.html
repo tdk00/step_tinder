@@ -18,10 +18,10 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-12 col-lg-6">
-                    <button style="color: red;" type="button" class="btn btn-outline-danger btn-block"><span class="fa fa-times"></span> Dislike</button>
+                    <button id="dislikeBtn" style="color: red;" type="button" class="btn btn-outline-danger btn-block"><span class="fa fa-times"></span> Dislike</button>
                 </div>
                 <div class="col-12 col-lg-6">
-                    <button style="color: green;" class="btn btn-outline-success btn-block"><span class="fa fa-heart"></span> Like</button>
+                    <button id="likeBtn" style="color: green;" class="btn btn-outline-success btn-block"><span class="fa fa-heart"></span> Like</button>
                 </div>
                 <!--/col-->
             </div>
@@ -51,7 +51,6 @@
                 for (var i = 0; i < allUsers.length; i++) {
                     var user = allUsers[i];
                         //var value = user.last_name;
-                        //alert(value);
                         $("#container").append('<div id="'+user.user_id+'" class="buddy"><div class="avatar" style="display: block; background-image: url('+user.user_img+')"></div><h2 class="nameSurname">'+user.first_name+' '+user.last_name+'</h2></div>');
                         if(i==0){
                             $(".buddy").show();
@@ -59,7 +58,20 @@
                 }
 
                 $(".buddy").on("swiperight",function(){
-                    alert($(this).attr("id"));
+                    var c_user_id = data.c_user_id;
+                    thisUserId = c_user_id[0].user_id;
+                    var likeToId = $(".buddy:visible").attr("id");
+                    $.post("liked",
+                        {
+                            like_from: thisUserId,
+                            like_to: likeToId
+                        },
+                        function(data, status){
+                            if(data=="false"){
+                                alert("error. Try Again");
+                                return false;
+                            }
+                        });
                     $(this).addClass('rotate-left').delay(700).fadeOut(1);
                     $('.buddy').find('.status').remove();
 
@@ -73,7 +85,6 @@
                 });
 
                 $(".buddy").on("swipeleft",function(){
-                    alert($(this).attr("id"));
                     $(this).addClass('rotate-right').delay(700).fadeOut(1);
                     $('.buddy').find('.status').remove();
                     $(this).append('<div class="status dislike">Dislike!</div>');
@@ -86,6 +97,12 @@
                     }
                 });
             });
+        $("#likeBtn").click(function(){
+            $('.buddy:visible').trigger('swiperight');
+        });
+        $("#dislikeBtn").click(function(){
+            $('.buddy:visible').trigger('swipeleft');
+        });
 
     });
 

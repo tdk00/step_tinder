@@ -5,9 +5,7 @@ import service.MessagesS;
 import service.User;
 import service.UsersList;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +46,21 @@ public class MessagesDAO {
         }
         return allMessages;
 
+    }
+    public boolean sendMessage (int msg_from, int msg_to, String content) {
+        String insertQuery = "INSERT INTO messages (msg_from, msg_to, content)" +
+                "VALUES (?, ?, ?)";
+        try {
+            currentCon = DbConnection.getConnection();
+            PreparedStatement preparedStatement = currentCon.prepareStatement(insertQuery);
+            preparedStatement.setInt(1, msg_from);
+            preparedStatement.setInt(2, msg_to);
+            preparedStatement.setString(3, content);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e){
+            return false;
+        }
+        return true;
     }
 }

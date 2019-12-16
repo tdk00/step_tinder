@@ -70,6 +70,8 @@
 <script>
     var params = new window.URLSearchParams(window.location.search);
     var toId = (params.get('id'));
+    var thisUserId = "";
+    var toUserId="";
 
     $.post("messages",
         {
@@ -79,6 +81,8 @@
 
             var allMessages = data.allMessages;
             var c_user_id = data.c_user_id;
+            thisUserId = c_user_id[0].user_id;
+            toUserId = toId;
             for (var i = 0; i < allMessages.length; i++) {
                 var message = allMessages[i];
                 if(message.user_from==c_user_id[0].user_id){
@@ -103,8 +107,27 @@
     $("#sendBtn").click(function () {
             var mContent = $("#msgContent").val();
             if(mContent.length>0){
-                $("#mCont").append('<li class="send-msg float-right mb-2"><p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">'+mContent+'</p> </li>');
-                $("#msgContent").val("");
+
+
+
+
+
+                $.post("sendMessage",
+                    {
+                        msg_from:thisUserId,
+                        msg_to:toUserId,
+                        content:mContent
+
+                    },
+                    function(data, status){
+                        if(data=="false"){
+                            alert("error - Try again")
+                        }
+                        else{
+                            $("#mCont").append('<li class="send-msg float-right mb-2"><p class="pt-1 pb-1 pl-2 pr-2 m-0 rounded">'+mContent+'</p> </li>');
+                            $("#msgContent").val("");
+                        }
+                    });
 
             }
     });
