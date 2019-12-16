@@ -1,8 +1,6 @@
 package servlet;
 
 import DAO.PeopleListDAO;
-import controller.PeopleList;
-import service.User;
 import service.UsersList;
 
 import javax.servlet.ServletException;
@@ -16,7 +14,6 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class LikePageServlet extends HttpServlet {
